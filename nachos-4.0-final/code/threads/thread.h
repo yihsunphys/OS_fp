@@ -114,12 +114,22 @@ class Thread {
     //<TODO>
     // Set & Get the value in Class Thread
     // 1. get ID
-    int getID() { return ID; }
     // 2. set/get Priority
     // 3. set/get WaitTime
     // 4. set/get RemainingBurstTime
     // 5. set/get RunTime
     // 6. set/get RRTime
+    int getID() { return ID; }
+    int getPriority() { return Priority; }
+    int getWaitTime() { return WaitTime; }
+    int getRemainingBurstTime() { return RemainingBurstTime; }
+    int getRunTime () { return RunTime; }
+    int getRRTime () { return RRTime; }
+    void setPriority(int priority) { this->Priority = priority; }
+    void setWaitTime(int WaitTime) { this->WaitTime = WaitTime; }
+    void setRemainingBurstTime(int RemainingBurstTime) { this->RemainingBurstTime = RemainingBurstTime; }
+    void setRunTime(int RunTime) { this->RunTime = RunTime; }
+    void setRRTime(int RRTime) { this->RRTime = RRTime; }
     //<TODO>
 
   private:
