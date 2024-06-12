@@ -78,7 +78,7 @@ main(int argc, char **argv)
 
     kernel = new KernelType(argc, argv);
     kernel->Initialize();
-    printf("success\n");
+
     CallOnUserAbort(Cleanup);		// if user hits ctl-C
 
 
