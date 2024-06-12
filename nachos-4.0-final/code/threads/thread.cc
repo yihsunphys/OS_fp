@@ -217,6 +217,7 @@ Thread::Yield ()
     // 1. Put current_thread in running state to ready state
     // 2. Then, find next thread from ready state to push on running state
     // 3. After resetting some value of current_thread, then context switch
+    bool finishing = FALSE;
     kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 

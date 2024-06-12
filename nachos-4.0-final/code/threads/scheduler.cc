@@ -72,13 +72,14 @@ Scheduler::ReadyToRun (Thread *thread)
 {
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     // DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
-
+    
     Statistics* stats = kernel->stats;
     //<TODO>
     // According to priority of Thread, put them into corresponding ReadyQueue.
     // After inserting Thread into ReadyQueue, don't forget to reset some values.
     // Hint: L1 ReadyQueue is preemptive SRTN(Shortest Remaining Time Next).
     // When putting a new thread into L1 ReadyQueue, you need to check whether preemption or not.
+    DEBUG('z', std::cout << "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L[queue level]\n");
     //<TODO>
     // readyList->Append(thread);
 }
@@ -104,6 +105,7 @@ Scheduler::FindNextToRun ()
 
     //<TODO>
     // a.k.a. Find Next (Thread in ReadyQueue) to Run
+    DEBUG('z', std::cout << "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [<< nextThread->getID() <<] is removed from queue L\n");
     //<TODO>
 }
 
@@ -153,7 +155,7 @@ Scheduler::Run (Thread *nextThread, bool finishing)
     nextThread->setStatus(RUNNING);      // nextThread is now running
     
     // DEBUG(dbgThread, "Switching from: " << oldThread->getName() << " to: " << nextThread->getName());
-    
+    DEBUG('z', std::cout << "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread [<< nextThread->getID() <<] is now selected for execution, thread [<< oldThread->getID() <<] is replaced, and it has executed [<< kernel->stats->totalTicks - oldThread->getStartTime() <<]\n");
     // This is a machine-dependent assembly language routine defined 
     // in switch.s.  You may have to think
     // a bit to figure out what happens after this, both from the point
@@ -229,7 +231,7 @@ Scheduler::Print()
 void 
 Scheduler::UpdatePriority()
 {
-
+  DEBUG('z', std::cout << "[UpdatePriority] Tick [" << kernel->stats->totalTicks << "]: Thread [thread->getID()] changes its priority from [<< oldPriority <<] to [<< thread->getPriority() <<]\n");
 }
 
 // <TODO>
