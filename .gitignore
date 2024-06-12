@@ -1,2 +1,7 @@
-.vscode/c_cpp_properties.json
+# Ignore object files
 *.o
+
+# Ignore editor-specific files
+.vscode/
+
+nachos-4.0-final/code/compile_result.txt
