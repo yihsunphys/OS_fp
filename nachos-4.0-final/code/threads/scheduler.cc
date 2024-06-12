@@ -43,6 +43,9 @@ Scheduler::Scheduler()
     //<TODO>
     // Initialize L1, L2, L3 ReadyQueue
     //<TODO>
+    L1ReadyQueue = new SortedList<Thread*>();
+    L2ReadyQueue = new SortedList<Thread*>();
+    L3ReadyQueue = new List<Thread*>();
 	toBeDestroyed = NULL;
 } 
 
@@ -56,7 +59,10 @@ Scheduler::~Scheduler()
     //<TODO>
     // Remove L1, L2, L3 ReadyQueue
     //<TODO>
-    // delete readyList; 
+    // delete readyList;
+    delete L1ReadyQueue;
+    delete L2ReadyQueue;
+    delete L3ReadyQueue;
 } 
 
 //----------------------------------------------------------------------
