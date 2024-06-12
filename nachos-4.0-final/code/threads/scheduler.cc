@@ -35,6 +35,14 @@
 // Declare sorting rule of SortedList for L1 & L2 ReadyQueue
 // Hint: Funtion Type should be "static int"
 //<TODO>
+int Scheduler::L1Comparator(Thread* a, Thread* b)
+{
+    return a->getRemainingBurstTime() < b->getRemainingBurstTime() ? -1 : 1;
+}
+int Scheduler::L2Comparator(Thread* a, Thread* b)
+{
+    return a->getID() < b->getID() ? -1 : 1;
+}
 
 Scheduler::Scheduler()
 {
@@ -43,8 +51,8 @@ Scheduler::Scheduler()
     //<TODO>
     // Initialize L1, L2, L3 ReadyQueue
     //<TODO>
-    L1ReadyQueue = new SortedList<Thread*>();
-    L2ReadyQueue = new SortedList<Thread*>();
+    L1ReadyQueue = new SortedList<Thread*>(&Scheduler::L1Comparator);
+    L2ReadyQueue = new SortedList<Thread*>(&Scheduler::L2Comparator);
     L3ReadyQueue = new List<Thread*>();
 	toBeDestroyed = NULL;
 } 
