@@ -190,6 +190,7 @@ UserProgKernel::InitializeOneThread(char* name, int priority, int burst_time)
     t[threadNum]->setRemainingBurstTime(burst_time);
     t[threadNum]->space = new AddrSpace();
     t[threadNum]->Fork((VoidFunctionPtr) &ForkExecute, (void *)t[threadNum]);
+    //cout << threadNum;
     //<TODO>
 
     threadNum++;
@@ -205,6 +206,6 @@ UserProgKernel::InitializeAllThreads()
         // cout << "execfile[" << i << "]: " << execfile[i] << " end "<< endl;
     }
     // After InitializeAllThreads(), let main thread be terminated that we can start to run our thread.
-    currentThread->Finish();
+    //currentThread->Finish();
     // kernel->machine->Run();
 }

@@ -86,7 +86,7 @@ main(int argc, char **argv)
 
     //<REPORT>
     //kernel->Run();
-    //kernel->InitializeAllThreads();
+    kernel->InitializeAllThreads();
     //<REPORT>
 
     

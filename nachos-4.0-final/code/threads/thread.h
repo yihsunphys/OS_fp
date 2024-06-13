@@ -112,29 +112,17 @@ class Thread {
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
     //<TODO>
-    // Set & Get the value in Class Thread
-    // 1. get ID
     int getID() { return ID; }
-    
-    // 2. set/get Priority
-    void setPriority(int priority) { Priority = priority; }
     int getPriority() { return Priority; }
-    
-    // 3. set/get WaitTime
-    void setWaitTime(int waitTime) { WaitTime = waitTime; }
     int getWaitTime() { return WaitTime; }
-    
-    // 4. set/get RemainingBurstTime
-    void setRemainingBurstTime(int remainingBurstTime) { RemainingBurstTime = remainingBurstTime; }
     int getRemainingBurstTime() { return RemainingBurstTime; }
-    
-    // 5. set/get RunTime
-    void setRunTime(int runTime) { RunTime = runTime; }
-    int getRunTime() { return RunTime; }
-    
-    // 6. set/get RRTime
-    void setRRTime(int rrTime) { RRTime = rrTime; }
-    int getRRTime() { return RRTime; }
+    int getRunTime () { return RunTime; }
+    int getRRTime () { return RRTime; }
+    void setPriority(int priority) { this->Priority = priority; }
+    void setWaitTime(int WaitTime) { this->WaitTime = WaitTime; }
+    void setRemainingBurstTime(int RemainingBurstTime) { this->RemainingBurstTime = RemainingBurstTime; }
+    void setRunTime(int RunTime) { this->RunTime = RunTime; }
+    void setRRTime(int RRTime) { this->RRTime = RRTime; }
     //<TODO>
 
   private:
