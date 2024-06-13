@@ -54,6 +54,9 @@ class Scheduler {
 	SortedList<Thread* > *L2ReadyQueue;
 	List<Thread* > *L3ReadyQueue;
 	//<REPORT>
+
+	static int L1Comparator(Thread* a, Thread* b);
+	static int L2Comparator(Thread* a, Thread* b);
 };
 
 #endif // SCHEDULER_H
