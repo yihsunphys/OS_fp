@@ -23,6 +23,12 @@
 #include "scheduler.h"
 #include "main.h"
 
+namespace
+{
+    const int L3_PRIORITY_LOWER_BOUND = 0;
+    const int L2_PRIORITY_LOWER_BOUND = 50;
+    const int L1_PRIORITY_LOWER_BOUND = 100;
+}
 //----------------------------------------------------------------------
 // Scheduler::Scheduler
 // 	Initialize the list of ready but not running threads.
@@ -95,6 +101,27 @@ Scheduler::ReadyToRun (Thread *thread)
     // When putting a new thread into L1 ReadyQueue, you need to check whether preemption or not.
     //<TODO>
     // readyList->Append(thread);
+    
+    int thread_priority = thread->getPriority();
+    if (thread_priority < L2_PRIORITY_LOWER_BOUND)
+    {
+        // insert to L3 Queue
+        L3ReadyQueue->Append(thread);
+    }
+    else if (thread_priority < L1_PRIORITY_LOWER_BOUND)
+    {
+        // Insert to L2 Queue
+        L2ReadyQueue->Insert(thread);
+    }
+    else
+    {
+        // Insert to L1 Queue
+        L1ReadyQueue->Insert(thread);
+        
+        // check if preemption is required
+        
+    }
+    
 }
 
 //----------------------------------------------------------------------
