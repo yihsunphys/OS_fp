@@ -119,7 +119,10 @@ Scheduler::ReadyToRun (Thread *thread)
         L1ReadyQueue->Insert(thread);
         
         // check if preemption is required
-        
+        if (thread->getRemainingBurstTime() < kernel->currentThread->getRemainingBurstTime())
+        {
+            // do preemption
+        }
     }
     
 }
@@ -146,6 +149,14 @@ Scheduler::FindNextToRun ()
     //<TODO>
     // a.k.a. Find Next (Thread in ReadyQueue) to Run
     //<TODO>
+    if (!L1ReadyQueue->IsEmpty())
+        return L1ReadyQueue->RemoveFront();
+    else if (!L2ReadyQueue->IsEmpty())
+        return L2ReadyQueue->RemoveFront();
+    else if (!L3ReadyQueue->IsEmpty())
+        return L3ReadyQueue->RemoveFront();
+    else
+        return NULL;
 }
 
 //----------------------------------------------------------------------
