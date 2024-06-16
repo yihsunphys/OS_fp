@@ -1143,10 +1143,10 @@ synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdlib-float.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../lib/list.h ../lib/debug.h \
- ../lib/utility.h ../lib/sysdep.h ../lib/list.cc ../threads/main.h \
- ../lib/debug.h ../network/netkernel.h ../userprog/userkernel.h \
+ ../lib/debug.h ../lib/utility.h ../lib/sysdep.h ../machine/machine.h \
+ ../machine/translate.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../lib/list.h ../lib/debug.h ../lib/list.cc \
+ ../threads/main.h ../network/netkernel.h ../userprog/userkernel.h \
  ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
  ../machine/callback.h ../machine/timer.h ../filesys/synchdisk.h \
@@ -1239,9 +1239,9 @@ synchlist.o: ../threads/synchlist.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../lib/list.cc ../threads/synch.h ../threads/thread.h ../lib/utility.h \
- ../lib/sysdep.h ../machine/machine.h ../machine/translate.h \
- ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
- ../threads/main.h ../lib/debug.h ../network/netkernel.h \
+ ../lib/sysdep.h ../lib/debug.h ../machine/machine.h \
+ ../machine/translate.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/main.h ../network/netkernel.h \
  ../userprog/userkernel.h ../threads/kernel.h ../threads/scheduler.h \
  ../machine/interrupt.h ../machine/callback.h ../machine/stats.h \
  ../threads/alarm.h ../machine/callback.h ../machine/timer.h \
@@ -1333,10 +1333,10 @@ thread.o: ../threads/thread.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdlib-float.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/switch.h \
- ../threads/synch.h ../lib/list.h ../lib/debug.h ../lib/utility.h \
- ../lib/sysdep.h ../lib/list.cc ../threads/main.h ../lib/debug.h \
+ ../lib/debug.h ../lib/utility.h ../lib/sysdep.h ../machine/machine.h \
+ ../machine/translate.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../threads/switch.h ../threads/synch.h \
+ ../lib/list.h ../lib/debug.h ../lib/list.cc ../threads/main.h \
  ../network/netkernel.h ../userprog/userkernel.h ../threads/kernel.h \
  ../threads/scheduler.h ../machine/interrupt.h ../machine/callback.h \
  ../machine/stats.h ../threads/alarm.h ../machine/callback.h \
@@ -1431,9 +1431,9 @@ elevatortest.o: ../machine/elevatortest.cc /usr/include/stdc-predef.h \
  /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../lib/list.cc ../threads/synch.h ../threads/thread.h ../lib/sysdep.h \
- ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/main.h \
- ../lib/debug.h ../network/netkernel.h ../userprog/userkernel.h \
+ ../lib/debug.h ../machine/machine.h ../machine/translate.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
+ ../threads/main.h ../network/netkernel.h ../userprog/userkernel.h \
  ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../threads/alarm.h ../machine/callback.h \
  ../machine/timer.h ../filesys/synchdisk.h ../machine/disk.h \
@@ -1812,10 +1812,10 @@ userkernel.o: ../userprog/userkernel.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdlib-float.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../lib/list.h ../lib/debug.h \
- ../lib/utility.h ../lib/sysdep.h ../lib/list.cc ../threads/main.h \
- ../lib/debug.h ../network/netkernel.h ../userprog/userkernel.h \
+ ../lib/debug.h ../lib/utility.h ../lib/sysdep.h ../machine/machine.h \
+ ../machine/translate.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../lib/list.h ../lib/debug.h ../lib/list.cc \
+ ../threads/main.h ../network/netkernel.h ../userprog/userkernel.h \
  ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../threads/alarm.h ../machine/timer.h \
  ../filesys/synchdisk.h ../machine/disk.h ../userprog/userkernel.h
@@ -2097,10 +2097,10 @@ synchconsole.o: ../userprog/synchconsole.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdlib-float.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../lib/list.h ../lib/debug.h \
- ../lib/utility.h ../lib/sysdep.h ../lib/list.cc ../threads/main.h \
- ../lib/debug.h ../network/netkernel.h ../userprog/userkernel.h \
+ ../lib/debug.h ../lib/utility.h ../lib/sysdep.h ../machine/machine.h \
+ ../machine/translate.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../lib/list.h ../lib/debug.h ../lib/list.cc \
+ ../threads/main.h ../network/netkernel.h ../userprog/userkernel.h \
  ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../threads/alarm.h ../machine/timer.h \
  ../filesys/synchdisk.h ../machine/disk.h
@@ -2192,10 +2192,10 @@ userkernel.o: ../userprog/userkernel.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdlib-float.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../lib/list.h ../lib/debug.h \
- ../lib/utility.h ../lib/sysdep.h ../lib/list.cc ../threads/main.h \
- ../lib/debug.h ../network/netkernel.h ../userprog/userkernel.h \
+ ../lib/debug.h ../lib/utility.h ../lib/sysdep.h ../machine/machine.h \
+ ../machine/translate.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../lib/list.h ../lib/debug.h ../lib/list.cc \
+ ../threads/main.h ../network/netkernel.h ../userprog/userkernel.h \
  ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../threads/alarm.h ../machine/timer.h \
  ../filesys/synchdisk.h ../machine/disk.h ../userprog/userkernel.h
@@ -2668,10 +2668,10 @@ synchdisk.o: ../filesys/synchdisk.cc /usr/include/stdc-predef.h \
  /usr/include/i386-linux-gnu/bits/stdlib-float.h /usr/include/libio.h \
  /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
- ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../lib/list.h ../lib/debug.h \
- ../lib/utility.h ../lib/sysdep.h ../lib/list.cc ../threads/main.h \
- ../lib/debug.h ../network/netkernel.h ../userprog/userkernel.h \
+ ../lib/debug.h ../lib/utility.h ../lib/sysdep.h ../machine/machine.h \
+ ../machine/translate.h ../userprog/addrspace.h ../filesys/filesys.h \
+ ../filesys/openfile.h ../lib/list.h ../lib/debug.h ../lib/list.cc \
+ ../threads/main.h ../network/netkernel.h ../userprog/userkernel.h \
  ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../threads/alarm.h ../machine/callback.h \
  ../machine/timer.h ../filesys/synchdisk.h
@@ -3229,9 +3229,9 @@ post.o: ../network/post.cc /usr/include/stdc-predef.h ../lib/copyright.h \
  /usr/include/_G_config.h /usr/include/i386-linux-gnu/bits/stdio_lim.h \
  /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
  ../lib/list.cc ../threads/synch.h ../threads/thread.h ../lib/sysdep.h \
- ../machine/machine.h ../machine/translate.h ../userprog/addrspace.h \
- ../filesys/filesys.h ../filesys/openfile.h ../threads/main.h \
- ../lib/debug.h ../network/netkernel.h ../userprog/userkernel.h \
+ ../lib/debug.h ../machine/machine.h ../machine/translate.h \
+ ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
+ ../threads/main.h ../network/netkernel.h ../userprog/userkernel.h \
  ../threads/kernel.h ../threads/scheduler.h ../machine/interrupt.h \
  ../machine/stats.h ../threads/alarm.h ../machine/timer.h \
  ../filesys/synchdisk.h ../machine/disk.h ../threads/synch.h \

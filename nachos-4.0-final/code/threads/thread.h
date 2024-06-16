@@ -40,7 +40,7 @@
 #include "copyright.h"
 #include "utility.h"
 #include "sysdep.h"
-
+#include "debug.h"
 // #ifdef USER_PROGRAM
 #include "machine.h"
 #include "addrspace.h"
@@ -115,7 +115,7 @@ class Thread {
     int getID() { return ID; }
     int getPriority() { return Priority; }
     int getWaitTime() { return WaitTime; }
-    int getRemainingBurstTime() { return RemainingBurstTime; }
+    int getRemainingBurstTime() { return RemainingBurstTime-T; }
     int getRunTime () { return RunTime; }
     int getRRTime () { return RRTime; }
     void setPriority(int priority) { this->Priority = priority; }
@@ -123,6 +123,27 @@ class Thread {
     void setRemainingBurstTime(int RemainingBurstTime) { this->RemainingBurstTime = RemainingBurstTime; }
     void setRunTime(int RunTime) { this->RunTime = RunTime; }
     void setRRTime(int RRTime) { this->RRTime = RRTime; }
+    //aging
+    
+    void setWaiting(int t) { waitingBegin = t; }
+    int updatePriority(int t) { 
+        int new_priority = Priority;
+        if (t - waitingBegin >= 400) {
+          new_priority = min(149, Priority + 10);
+          //if (priority < 149)
+          DEBUG('z', "[UpdatePriority] Tick [" << t << "]: Thread [" << getID() <<"] changes its priority from[" << Priority <<"] to [" << new_priority <<"]");
+          Priority = new_priority;
+          waitingBegin = t;
+        }
+        return new_priority;
+    }
+    double updateT(double difference, int time) { 
+      // DEBUG(dbgMP3, "[F] Tick [" << time << "]: Thread [" << ID << ", " << name << "] update T, from: [" << T << "], to [" << T + difference<< "]. Current approximatedBurstTime = " << approximatedBurstTime);
+      return T = T + difference;
+    }
+    
+    // Reset T back to 0
+    void resetT() { T = 0.0; }
     //<TODO>
 
   private:
@@ -140,7 +161,9 @@ class Thread {
     int RemainingBurstTime;
     int RunTime;
     int RRTime;
+    int T;
     //<REPORT>
+    int waitingBegin;
     void StackAllocate(VoidFunctionPtr func, void *arg);
     				// Allocate a stack for thread.
 				// Used internally by Fork()
