@@ -218,7 +218,7 @@ Thread::Yield ()
     // 2. Then, find next thread from ready state to push on running state
     // 3. After resetting some value of current_thread, then context switch
 
-    updateT(kernel->scheduler->RunTime(), kernel->stats->totalTicks);
+    updateT(kernel->scheduler->RunTime());
     nextThread = kernel->scheduler->FindNextToRun();
     if (nextThread != NULL) {
 	kernel->scheduler->ReadyToRun(this);
@@ -261,7 +261,7 @@ Thread::Sleep (bool finishing)
     //cout << "Sleeping thread: " << name << ", ID: " << ID;
     status = BLOCKED;
 
-    //updateT(kernel->scheduler->RunTime(), kernel->stats->totalTicks);
+    //updateT(kernel->scheduler->RunTime());
     //updateBurstTime(kernel->stats->totalTicks);
     
     //DEBUG('z', "[UpdateRemainingBurstTime] Tick ["<<kernel->stats->totalTicks<<"]: Thread ["<<getID()<<"] update remaining burst time, from: ["<<getRemainingBurstTime()<<"] - [" <<T<<"], to ["<<getRemainingBurstTime()-T<<"]");

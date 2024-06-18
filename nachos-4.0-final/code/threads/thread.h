@@ -137,13 +137,13 @@ class Thread {
         }
         return new_priority;
     }
-    double updateT(double difference, int time) { 
-      // DEBUG(dbgMP3, "[F] Tick [" << time << "]: Thread [" << ID << ", " << name << "] update T, from: [" << T << "], to [" << T + difference<< "]. Current approximatedBurstTime = " << approximatedBurstTime);
-      return T = T + difference;
+    double updateT(double difference) { 
+      // DEBUG(dbgMP3, "[F] Tick [" << time << "]: Thread [" << ID << ", " << name << "] update T, from: [" << LastSwitchTime << "], to [" << LastSwitchTime + difference<< "]. Current approximatedBurstTime = " << approximatedBurstTime);
+      return LastSwitchTime = LastSwitchTime + difference;
     }
     
-    // Reset T back to 0
-    void resetT() { T = 0.0; }
+    // Reset LastSwitchTime back to 0
+    void resetT() { LastSwitchTime = 0.0; }
     //<TODO>
 
   private:
@@ -161,7 +161,7 @@ class Thread {
     int RemainingBurstTime;
     int RunTime;
     int RRTime;
-    int T;
+    int LastSwitchTime;
     //<REPORT>
     int waitingBegin;
     void StackAllocate(VoidFunctionPtr func, void *arg);
