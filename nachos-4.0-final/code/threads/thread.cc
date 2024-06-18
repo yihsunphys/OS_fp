@@ -218,7 +218,7 @@ Thread::Yield ()
     // 2. Then, find next thread from ready state to push on running state
     // 3. After resetting some value of current_thread, then context switch
 
-    updateT(kernel->scheduler->RunTime());
+    updateLST(kernel->scheduler->RunTime());
     nextThread = kernel->scheduler->FindNextToRun();
     if (nextThread != NULL) {
 	kernel->scheduler->ReadyToRun(this);

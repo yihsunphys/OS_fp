@@ -115,7 +115,7 @@ class Thread {
     int getID() { return ID; }
     int getPriority() { return Priority; }
     int getWaitTime() { return WaitTime; }
-    int getRemainingBurstTime() { return RemainingBurstTime-T; }
+    int getRemainingBurstTime() { return RemainingBurstTime - LastSwitchTime; }
     int getRunTime () { return RunTime; }
     int getRRTime () { return RRTime; }
     void setPriority(int priority) { this->Priority = priority; }
@@ -137,7 +137,7 @@ class Thread {
         }
         return new_priority;
     }
-    double updateT(double difference) { 
+    double updateLST(double difference) { 
       // DEBUG(dbgMP3, "[F] Tick [" << time << "]: Thread [" << ID << ", " << name << "] update T, from: [" << LastSwitchTime << "], to [" << LastSwitchTime + difference<< "]. Current approximatedBurstTime = " << approximatedBurstTime);
       return LastSwitchTime = LastSwitchTime + difference;
     }
