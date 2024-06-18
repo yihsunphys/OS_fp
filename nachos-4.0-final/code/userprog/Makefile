@@ -1048,7 +1048,13 @@ scheduler.o: ../threads/scheduler.cc /usr/include/stdc-predef.h \
  ../userprog/userkernel.h ../threads/kernel.h ../machine/interrupt.h \
  ../machine/callback.h ../machine/stats.h ../threads/alarm.h \
  ../machine/callback.h ../machine/timer.h ../filesys/synchdisk.h \
- ../machine/disk.h ../threads/synch.h
+ ../machine/disk.h ../threads/synch.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include-fixed/limits.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/i386-linux-gnu/bits/posix1_lim.h \
+ /usr/include/i386-linux-gnu/bits/local_lim.h /usr/include/linux/limits.h \
+ /usr/include/i386-linux-gnu/bits/posix2_lim.h \
+ /usr/include/i386-linux-gnu/bits/xopen_lim.h
 synch.o: ../threads/synch.cc /usr/include/stdc-predef.h \
  ../lib/copyright.h ../threads/synch.h ../threads/thread.h \
  ../lib/utility.h ../lib/copyright.h ../lib/sysdep.h \
