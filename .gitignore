@@ -5,3 +5,11 @@
 .vscode/
 
 nachos-4.0-final/code/compile_result.txt
+nachos-4.0-final/code/test/fileTest1
+nachos-4.0-final/code/test/fileTest2
+nachos-4.0-final/code/test/halt
+nachos-4.0-final/code/test/matmult
+nachos-4.0-final/code/test/shell
+nachos-4.0-final/code/test/sort
+nachos-4.0-final/code/test/test1
+nachos-4.0-final/code/test/test2
