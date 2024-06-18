@@ -218,11 +218,13 @@ Thread::Yield ()
     // 2. Then, find next thread from ready state to push on running state
     // 3. After resetting some value of current_thread, then context switch
 
-    updateLST(kernel->scheduler->RunTime());
+    // updateLST(kernel->scheduler->RunTime());
+    setRemainingBurstTime(RemainingBurstTime - kernel->scheduler->RunTime());
+    kernel->scheduler->ReadyToRun(this);
     nextThread = kernel->scheduler->FindNextToRun();
+    
     if (nextThread != NULL) {
-	kernel->scheduler->ReadyToRun(this);
-	kernel->scheduler->Run(nextThread, FALSE);
+        kernel->scheduler->Run(nextThread, RemainingBurstTime <= 0);
     }
     //<TODO>
 

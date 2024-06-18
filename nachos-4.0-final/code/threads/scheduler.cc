@@ -104,9 +104,10 @@ Scheduler::ReadyToRun (Thread *thread)
     // After inserting Thread into ReadyQueue, don't forget to reset some values.
     // Hint: L1 ReadyQueue is preemptive SRTN(Shortest Remaining Time Next).
     // When putting a new thread into L1 ReadyQueue, you need to check whether preemption or not.
-    thread->setWaitTime(0);  // Reset wait time to 0
+    thread->setWaitTime(stats->totalTicks);
     thread->setStatus(READY);
-    thread->setWaiting(kernel->stats->totalTicks);
+    
+
     int priority = thread->getPriority();
     int level;
     if (priority >= L3_PRIORITY_LOWER_BOUND && priority < L2_PRIORITY_LOWER_BOUND) 
@@ -129,7 +130,7 @@ Scheduler::ReadyToRun (Thread *thread)
         cout << "Invalid Priority!" << endl;
         Abort();
     }
-    DEBUG('z', "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L" << level);
+    DEBUG('z', "[InsertToQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L" << level);
     //<TODO>
     // readyList->Append(thread);
 

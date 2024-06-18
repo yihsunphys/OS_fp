@@ -126,16 +126,14 @@ class Thread {
     void setRunTime(int RunTime) { this->RunTime = RunTime; }
     void setRRTime(int RRTime) { this->RRTime = RRTime; }
     //aging
-    
-    void setWaiting(int t) { waitingBegin = t; }
     int updatePriority(int t) { 
         int new_priority = Priority;
-        if (t - waitingBegin >= 400) {
+        if (t - WaitTime >= 400) {
           new_priority = min(149, Priority + 10);
           //if (priority < 149)
           DEBUG('z', "[UpdatePriority] Tick [" << t << "]: Thread [" << getID() <<"] changes its priority from[" << Priority <<"] to [" << new_priority <<"]");
           Priority = new_priority;
-          waitingBegin = t;
+          WaitTime = t;
         }
         return new_priority;
     }
@@ -165,7 +163,7 @@ class Thread {
     int RRTime;
     int LastSwitchTime;
     //<REPORT>
-    int waitingBegin;
+    
     void StackAllocate(VoidFunctionPtr func, void *arg);
     				// Allocate a stack for thread.
 				// Used internally by Fork()
