@@ -217,7 +217,13 @@ Thread::Yield ()
     // 1. Put current_thread in running state to ready state
     // 2. Then, find next thread from ready state to push on running state
     // 3. After resetting some value of current_thread, then context switch
-    kernel->scheduler->Run(nextThread, finishing);
+
+    updateT(kernel->scheduler->RunTime(), kernel->stats->totalTicks);
+    nextThread = kernel->scheduler->FindNextToRun();
+    if (nextThread != NULL) {
+	kernel->scheduler->ReadyToRun(this);
+	kernel->scheduler->Run(nextThread, FALSE);
+    }
     //<TODO>
 
     (void) kernel->interrupt->SetLevel(oldLevel);
@@ -252,8 +258,15 @@ Thread::Sleep (bool finishing)
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     
     DEBUG(dbgThread, "Sleeping thread: " << name << ", ID: " << ID);
-
+    //cout << "Sleeping thread: " << name << ", ID: " << ID;
     status = BLOCKED;
+
+    //updateT(kernel->scheduler->RunTime(), kernel->stats->totalTicks);
+    //updateBurstTime(kernel->stats->totalTicks);
+    
+    //DEBUG('z', "[UpdateRemainingBurstTime] Tick ["<<kernel->stats->totalTicks<<"]: Thread ["<<getID()<<"] update remaining burst time, from: ["<<getRemainingBurstTime()<<"] - [" <<T<<"], to ["<<getRemainingBurstTime()-T<<"]");
+    //setRemainingBurstTime(getRemainingBurstTime()-T);
+    //resetT();
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
 	    kernel->interrupt->Idle();	// no one to run, wait for an interruptd
 
@@ -262,6 +275,7 @@ Thread::Sleep (bool finishing)
     // , and determine finishing on Scheduler::Run(nextThread, finishing), not here.
     // 1. Update RemainingBurstTime
     // 2. Reset some value of current_thread, then context switch
+    //this->setRemainingBurstTime();
     kernel->scheduler->Run(nextThread, finishing);
     //<TODO>
 }

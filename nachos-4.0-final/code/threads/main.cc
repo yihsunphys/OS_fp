@@ -56,7 +56,7 @@ int
 main(int argc, char **argv)
 {
     int i;
-    char *debugArg = "";
+    char *debugArg = "z";
 
     // before anything else, initialize the debugging system
     for (i = 1; i < argc; i++) {
@@ -78,14 +78,14 @@ main(int argc, char **argv)
 
     kernel = new KernelType(argc, argv);
     kernel->Initialize();
-    
+
     CallOnUserAbort(Cleanup);		// if user hits ctl-C
 
 
-    // kernel->SelfTest();
+    kernel->SelfTest();
 
     //<REPORT>
-    // kernel->Run();
+    //kernel->Run();
     kernel->InitializeAllThreads();
     //<REPORT>
 

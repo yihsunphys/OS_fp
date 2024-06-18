@@ -61,6 +61,7 @@ Scheduler::Scheduler()
     L2ReadyQueue = new SortedList<Thread*>(&Scheduler::L2Comparator);
     L3ReadyQueue = new List<Thread*>();
 	toBeDestroyed = NULL;
+    threadStartTick = kernel->stats->totalTicks;
 } 
 
 //----------------------------------------------------------------------
@@ -92,13 +93,31 @@ Scheduler::ReadyToRun (Thread *thread)
 {
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     // DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
-
+    
     Statistics* stats = kernel->stats;
     //<TODO>
     // According to priority of Thread, put them into corresponding ReadyQueue.
     // After inserting Thread into ReadyQueue, don't forget to reset some values.
     // Hint: L1 ReadyQueue is preemptive SRTN(Shortest Remaining Time Next).
     // When putting a new thread into L1 ReadyQueue, you need to check whether preemption or not.
+    thread->setWaitTime(0);  // Reset wait time to 0
+    thread->setStatus(READY);
+    thread->setWaiting(kernel->stats->totalTicks);
+    int priority = thread->getPriority(), level;
+    if (priority >= 0 && priority < 50) {
+        L3ReadyQueue->Append(thread);
+        level = 3;
+    } else if (priority >= 50 && priority < 100) {
+        L2ReadyQueue->Insert(thread);
+        level = 2;
+    } else if (priority >= 100 && priority < 150) {
+        L1ReadyQueue->Insert(thread);
+        level = 1;
+    } else {
+        cout << "Invalid priority\n";
+        Abort();
+    }
+    DEBUG('z', "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L" << level);
     //<TODO>
     // readyList->Append(thread);
     
@@ -148,6 +167,35 @@ Scheduler::FindNextToRun ()
 
     //<TODO>
     // a.k.a. Find Next (Thread in ReadyQueue) to Run
+    
+
+    Thread* thread;
+    int currentLayer;
+    if (L1ReadyQueue->IsEmpty()) {
+        if (L2ReadyQueue->IsEmpty()) {
+            if (L3ReadyQueue->IsEmpty())
+                // All lists are empty
+                thread = NULL;
+            else {
+                // Next thread ls from layer 3
+                currentLayer = 3;
+                thread = L3ReadyQueue->RemoveFront();
+            }
+        } else {
+            // Next thread is from layer 2
+            currentLayer = 2;
+            thread = L2ReadyQueue->RemoveFront();
+
+        }
+    } else {
+        // Next thread is from layer 1
+        currentLayer = 1;
+        thread =L1ReadyQueue->RemoveFront();
+    }
+    if (thread != NULL)
+        DEBUG('z', "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() <<"] is removed from queue L"<< currentLayer);
+    
+    return thread;
     //<TODO>
     if (!L1ReadyQueue->IsEmpty())
         return L1ReadyQueue->RemoveFront();
@@ -180,8 +228,8 @@ void
 Scheduler::Run (Thread *nextThread, bool finishing)
 {
     Thread *oldThread = kernel->currentThread;
- 
-//	cout << "Current Thread" <<oldThread->getName() << "    Next Thread"<<nextThread->getName()<<endl;
+    
+	//cout << "Current Thread" <<oldThread->getName() << "    Next Thread"<<nextThread->getName()<<endl;
    
     ASSERT(kernel->interrupt->getLevel() == IntOff);
 
@@ -205,13 +253,15 @@ Scheduler::Run (Thread *nextThread, bool finishing)
     nextThread->setStatus(RUNNING);      // nextThread is now running
     
     // DEBUG(dbgThread, "Switching from: " << oldThread->getName() << " to: " << nextThread->getName());
-    
+    if(oldThread->getID()!=nextThread->getID())
+      DEBUG('z', "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread ["<< nextThread->getID() <<"] is now selected for execution, thread [" <<oldThread->getID()<<"] is replaced, and it has executed [" << RunTime()<<"]");
+    threadStartTick = kernel->stats->totalTicks;
     // This is a machine-dependent assembly language routine defined 
     // in switch.s.  You may have to think
     // a bit to figure out what happens after this, both from the point
     // of view of the thread and from the perspective of the "outside world".
-
-    cout << "Switching from: " << oldThread->getID() << " to: " << nextThread->getID() << endl;
+    if(oldThread->getID()!=nextThread->getID())
+      cout << "Switching from: " << oldThread->getID() << " to: " << nextThread->getID() << endl;
     SWITCH(oldThread, nextThread);
 
     // we're back, running oldThread
@@ -278,10 +328,85 @@ Scheduler::Print()
 // 2. Update WaitTime and priority in Aging situations
 // 3. After aging, Thread may insert to different ReadyQueue
 
-void 
-Scheduler::UpdatePriority()
-{
+void Scheduler::UpdatePriority() {
+    // L1: Update Priority if necessary
+    int time = kernel->stats->totalTicks;
+    ListIterator<Thread *> iter1(L1ReadyQueue); // It's also ok to not update in L1
+    for (; !iter1.IsDone(); iter1.Next()) 
+        iter1.Item()->updatePriority(time);
 
+    // L2: We need to record those threads that update their priority
+    ListIterator<Thread *> iter2(L2ReadyQueue); 
+    List<Thread *> uplevel2; // Threads that goes to L1
+    List<Thread *> upgrade; // Threads that has updated their priority
+    // First update the priorities
+    for (; !iter2.IsDone(); iter2.Next()) {
+        int old = iter2.Item()->getPriority();
+        int priority = iter2.Item()->updatePriority(time);
+        if (old != priority) {
+            if (priority >= 100) // update of level
+                uplevel2.Append(iter2.Item());
+            else 
+                upgrade.Append(iter2.Item());
+        }
+    }
+    // Then insert to corresponding queues
+    ListIterator<Thread *> uplevel2Iter(&uplevel2);
+    for (; !uplevel2Iter.IsDone(); uplevel2Iter.Next()) {
+        L2ReadyQueue->Remove(uplevel2Iter.Item());
+        DEBUG('z', "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << uplevel2Iter.Item()->getID() <<"] is removed from queue L2");
+        L1ReadyQueue->Insert(uplevel2Iter.Item());
+        DEBUG('z', "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << uplevel2Iter.Item()->getID() << "] is inserted into queue L1");
+    }
+    ListIterator<Thread *> upgradeIter(&upgrade);
+    for (; !upgradeIter.IsDone(); upgradeIter.Next()) {
+        L2ReadyQueue->Remove(upgradeIter.Item());
+        DEBUG('z', "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << upgradeIter.Item()->getID() <<"] is removed from queue L2");
+        L2ReadyQueue->Insert(upgradeIter.Item());
+        DEBUG('z', "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << upgradeIter.Item()->getID() << "] is inserted into queue L2");
+    }
+
+    // L3: Similarly use a list to store who will go uplevel
+    ListIterator<Thread *> iter3(L3ReadyQueue); 
+    List<Thread *> uplevel3;
+    for (; !iter3.IsDone(); iter3.Next()) {
+        int priority = iter3.Item()->updatePriority(time);
+        if (priority >= 50)  // update of level 
+            uplevel3.Append(iter3.Item());
+    }
+    ListIterator<Thread *> uplevel3Iter(&uplevel3);
+    for (; !uplevel3Iter.IsDone(); uplevel3Iter.Next()) {
+        L3ReadyQueue->Remove(uplevel3Iter.Item());
+        DEBUG('z', "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << uplevel3Iter.Item()->getID() <<"] is removed from queue L3");
+        L2ReadyQueue->Insert(uplevel3Iter.Item());
+        DEBUG('z', "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << uplevel3Iter.Item()->getID() << "] is inserted into queue L2");
+    }
 }
+bool Scheduler::ToYield () {
+    bool yield;
+    // Since we don't update current thread T, so we need deduct run time here
+    int currentThreadRemainTime = kernel->currentThread->getRemainingBurstTime() - RunTime();
+    // If L1 is empty, it is ok to be any number
+    int firstL1ThreadRemainTime = L1ReadyQueue->IsEmpty() ? 0 : L1ReadyQueue->Front()->getRemainingBurstTime();
 
+    // Time quantum is done
+    if (currentLayer == 3 && RunTime() >= 200)
+        yield = TRUE;
+    // Preemption
+    else if (currentLayer == 3 && !(L1ReadyQueue->IsEmpty() && L2ReadyQueue->IsEmpty()))
+        yield = TRUE;
+    else if (currentLayer == 2 && !L1ReadyQueue->IsEmpty())
+        yield = TRUE;
+    else if (currentLayer == 1 && !L1ReadyQueue->IsEmpty() && firstL1ThreadRemainTime < currentThreadRemainTime)
+        yield = TRUE;
+    // No need to Yield
+    else
+        yield = FALSE;
+
+    return yield;
+    return false;
+}
+int Scheduler::RunTime() {
+    return kernel->stats->totalTicks - threadStartTick;
+}
 // <TODO>

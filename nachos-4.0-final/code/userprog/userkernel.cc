@@ -37,7 +37,9 @@ UserProgKernel::UserProgKernel(int argc, char **argv)
 		//<TODO>
         // Get execfile & its priority & burst time from argv, then save them.
 		else if (strcmp(argv[i], "-epb") == 0) {
-
+            execfile[++execfileNum]= argv[++i];
+            threadPriority[execfileNum] = atoi(argv[++i]);
+            threadRemainingBurstTime[execfileNum] = atoi(argv[++i]);
 	    }
 	    //<TODO>
 	    else if (strcmp(argv[i], "-u") == 0) {
@@ -69,7 +71,6 @@ UserProgKernel::Initialize()
 
     machine = new Machine(debugUserProg);
     fileSystem = new FileSystem();
-
 
     currentThread = new Thread("main", threadNum++);	
     synchConsoleIn = new SynchConsoleInput(consoleIn);
@@ -176,6 +177,11 @@ ForkExecute(Thread *t)
     //<TODO>
     // When Thread t goes to Running state in the first time, its file should be loaded & executed.
     // Hint: This function would not be called until Thread t is on running state.
+    if ( !t->space->Load(t->getName()) ) {
+    	return;             // executable not found
+    }
+	
+    t->space->Execute(t->getName());
     //<TODO>
 }
 

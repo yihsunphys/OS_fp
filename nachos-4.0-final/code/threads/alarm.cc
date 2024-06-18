@@ -63,7 +63,10 @@ Alarm::CallBack()
     // 2. Update RunTime & RRTime
 
     // 3. Check Round Robin
-
+    kernel->scheduler->UpdatePriority();
+    if (status != IdleMode && kernel->scheduler->ToYield()) {
+	  interrupt->YieldOnReturn();
+    }
     //<TODO>
     
      //    if (status == IdleMode) {    // is it time to quit?

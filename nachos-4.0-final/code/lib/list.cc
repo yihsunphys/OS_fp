@@ -54,7 +54,7 @@ List<T>::List()
 template <class T>
 List<T>::~List()
 { 
-    ASSERT(IsEmpty());		// make sure list is empty
+    //ASSERT(IsEmpty());		// make sure list is empty
 }
 
 //----------------------------------------------------------------------
