@@ -262,7 +262,7 @@ Thread::Sleep (bool finishing)
     status = BLOCKED;
 
     updateT(kernel->scheduler->RunTime(), kernel->stats->totalTicks);
-    if(getRemainingBurstTime()-T > 0){
+    if(getRemainingBurstTime()-T > 0 && T!=0){
       DEBUG('z', "[UpdateRemainingBurstTime] Tick ["<<kernel->stats->totalTicks<<"]: Thread ["<<getID()<<"] update remaining burst time, from: ["<<getRemainingBurstTime()<<"] - [" <<min(T,getRemainingBurstTime())<<"], to ["<<max(0, getRemainingBurstTime()-T)<<"]");
       setRemainingBurstTime(max(0, getRemainingBurstTime()-T));
       resetT();
