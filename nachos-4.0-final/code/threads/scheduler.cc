@@ -22,6 +22,16 @@
 #include "debug.h"
 #include "scheduler.h"
 #include "main.h"
+#include <limits.h>
+
+namespace
+{
+    const int L3_PRIORITY_LOWER_BOUND = 0;
+    const int L2_PRIORITY_LOWER_BOUND = 50;
+    const int L1_PRIORITY_LOWER_BOUND = 100;
+    const int L1_PRIORITY_UPPER_BOUND = 150;
+    const int RR_TIME_QUANTUM = 200;
+}
 
 //----------------------------------------------------------------------
 // Scheduler::Scheduler
@@ -97,18 +107,26 @@ Scheduler::ReadyToRun (Thread *thread)
     thread->setWaitTime(0);  // Reset wait time to 0
     thread->setStatus(READY);
     thread->setWaiting(kernel->stats->totalTicks);
-    int priority = thread->getPriority(), level;
-    if (priority >= 0 && priority < 50) {
+    int priority = thread->getPriority();
+    int level;
+    if (priority >= L3_PRIORITY_LOWER_BOUND && priority < L2_PRIORITY_LOWER_BOUND) 
+    {
         L3ReadyQueue->Append(thread);
         level = 3;
-    } else if (priority >= 50 && priority < 100) {
+    } 
+    else if (priority < L1_PRIORITY_LOWER_BOUND) 
+    {
         L2ReadyQueue->Insert(thread);
         level = 2;
-    } else if (priority >= 100 && priority < 150) {
+    } 
+    else if (priority < L1_PRIORITY_UPPER_BOUND) 
+    {
         L1ReadyQueue->Insert(thread);
         level = 1;
-    } else {
-        cout << "Invalid priority\n";
+    } 
+    else 
+    {
+        cout << "Invalid Priority!" << endl;
         Abort();
     }
     DEBUG('z', "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L" << level);
@@ -137,30 +155,21 @@ Scheduler::FindNextToRun ()
 
     //<TODO>
     // a.k.a. Find Next (Thread in ReadyQueue) to Run
-    
-
-    Thread* thread;
-    int currentLayer;
-    if (L1ReadyQueue->IsEmpty()) {
-        if (L2ReadyQueue->IsEmpty()) {
-            if (L3ReadyQueue->IsEmpty())
-                // All lists are empty
-                thread = NULL;
-            else {
-                // Next thread ls from layer 3
-                currentLayer = 3;
-                thread = L3ReadyQueue->RemoveFront();
-            }
-        } else {
-            // Next thread is from layer 2
-            currentLayer = 2;
-            thread = L2ReadyQueue->RemoveFront();
-
-        }
-    } else {
-        // Next thread is from layer 1
+    Thread* thread = NULL;
+    if (!L1ReadyQueue->IsEmpty()) 
+    {
         currentLayer = 1;
-        thread =L1ReadyQueue->RemoveFront();
+        thread = L1ReadyQueue->RemoveFront();
+    }
+    else if (!L2ReadyQueue->IsEmpty())
+    {
+        currentLayer = 2;
+        thread = L2ReadyQueue->RemoveFront();
+    }
+    else if (!L3ReadyQueue->IsEmpty())
+    {
+        currentLayer = 3;
+        thread = L3ReadyQueue->RemoveFront();
     }
     if (thread != NULL)
         DEBUG('z', "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() <<"] is removed from queue L"<< currentLayer);
@@ -345,28 +354,20 @@ void Scheduler::UpdatePriority() {
     }
 }
 bool Scheduler::ToYield () {
-    bool yield;
-    // Since we don't update current thread T, so we need deduct run time here
+    bool yield = false;
     int currentThreadRemainTime = kernel->currentThread->getRemainingBurstTime() - RunTime();
-    // If L1 is empty, it is ok to be any number
-    int firstL1ThreadRemainTime = L1ReadyQueue->IsEmpty() ? 0 : L1ReadyQueue->Front()->getRemainingBurstTime();
+    int L1MinRemainTime = L1ReadyQueue->IsEmpty() ? INT_MAX : L1ReadyQueue->Front()->getRemainingBurstTime();
 
-    // Time quantum is done
-    if (currentLayer == 3 && RunTime() >= 200)
-        yield = TRUE;
-    // Preemption
-    else if (currentLayer == 3 && !(L1ReadyQueue->IsEmpty() && L2ReadyQueue->IsEmpty()))
-        yield = TRUE;
+    if (currentLayer == 3 && RunTime() >= RR_TIME_QUANTUM)
+    {
+        if (RunTime() >= RR_TIME_QUANTUM || !L1ReadyQueue->IsEmpty() || !L2ReadyQueue->IsEmpty())
+            yield = true;
+    }
     else if (currentLayer == 2 && !L1ReadyQueue->IsEmpty())
-        yield = TRUE;
-    else if (currentLayer == 1 && !L1ReadyQueue->IsEmpty() && firstL1ThreadRemainTime < currentThreadRemainTime)
-        yield = TRUE;
-    // No need to Yield
-    else
-        yield = FALSE;
-
+        yield = true;
+    else if (currentLayer == 1 && L1MinRemainTime < currentThreadRemainTime)
+        yield = true;
     return yield;
-    return false;
 }
 int Scheduler::RunTime() {
     return kernel->stats->totalTicks - threadStartTick;
