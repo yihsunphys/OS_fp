@@ -313,17 +313,11 @@ void Scheduler::UpdatePriority() {
     // L2: We need to record those threads that update their priority
     ListIterator<Thread *> iter2(L2ReadyQueue); 
     List<Thread *> uplevel2; // Threads that goes to L1
-    List<Thread *> upgrade; // Threads that has updated their priority
     // First update the priorities
     for (; !iter2.IsDone(); iter2.Next()) {
-        int old = iter2.Item()->getPriority();
-        int priority = iter2.Item()->updatePriority(time);
-        if (old != priority) {
-            if (priority >= 100) // update of level
-                uplevel2.Append(iter2.Item());
-            else 
-                upgrade.Append(iter2.Item());
-        }
+        iter2.Item()->updatePriority(time);
+        if (iter2.Item()->getPriority() >= 100) // update of level
+            uplevel2.Append(iter2.Item());
     }
     // Then insert to corresponding queues
     ListIterator<Thread *> uplevel2Iter(&uplevel2);
@@ -333,20 +327,13 @@ void Scheduler::UpdatePriority() {
         L1ReadyQueue->Insert(uplevel2Iter.Item());
         DEBUG('z', "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << uplevel2Iter.Item()->getID() << "] is inserted into queue L1");
     }
-    ListIterator<Thread *> upgradeIter(&upgrade);
-    for (; !upgradeIter.IsDone(); upgradeIter.Next()) {
-        L2ReadyQueue->Remove(upgradeIter.Item());
-        DEBUG('z', "[RemoveFromQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << upgradeIter.Item()->getID() <<"] is removed from queue L2");
-        L2ReadyQueue->Insert(upgradeIter.Item());
-        DEBUG('z', "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << upgradeIter.Item()->getID() << "] is inserted into queue L2");
-    }
 
     // L3: Similarly use a list to store who will go uplevel
     ListIterator<Thread *> iter3(L3ReadyQueue); 
     List<Thread *> uplevel3;
     for (; !iter3.IsDone(); iter3.Next()) {
-        int priority = iter3.Item()->updatePriority(time);
-        if (priority >= 50)  // update of level 
+        iter3.Item()->updatePriority(time);
+        if (iter3.Item()->getPriority() >= 50)  // update of level 
             uplevel3.Append(iter3.Item());
     }
     ListIterator<Thread *> uplevel3Iter(&uplevel3);

@@ -126,16 +126,14 @@ class Thread {
     void setRunTime(int RunTime) { this->RunTime = RunTime; }
     void setRRTime(int RRTime) { this->RRTime = RRTime; }
     //aging
-    int updatePriority(int t) { 
-        int new_priority = Priority;
+    void updatePriority(int t) { 
         if (t - WaitTime >= 400) {
-          new_priority = min(149, Priority + 10);
+          int new_priority = min(149, Priority + 10);
           //if (priority < 149)
           DEBUG('z', "[UpdatePriority] Tick [" << t << "]: Thread [" << getID() <<"] changes its priority from[" << Priority <<"] to [" << new_priority <<"]");
-          Priority = new_priority;
           WaitTime = t;
+          Priority = new_priority;
         }
-        return new_priority;
     }
     double updateLST(double difference) { 
       // DEBUG(dbgMP3, "[F] Tick [" << time << "]: Thread [" << ID << ", " << name << "] update T, from: [" << LastSwitchTime << "], to [" << LastSwitchTime + difference<< "]. Current approximatedBurstTime = " << approximatedBurstTime);
