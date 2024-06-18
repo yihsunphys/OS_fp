@@ -132,29 +132,7 @@ Scheduler::ReadyToRun (Thread *thread)
     DEBUG('z', "[InsertToQueue] Tick [" << kernel->stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L" << level);
     //<TODO>
     // readyList->Append(thread);
-    
-    int thread_priority = thread->getPriority();
-    if (thread_priority < L2_PRIORITY_LOWER_BOUND)
-    {
-        // insert to L3 Queue
-        L3ReadyQueue->Append(thread);
-    }
-    else if (thread_priority < L1_PRIORITY_LOWER_BOUND)
-    {
-        // Insert to L2 Queue
-        L2ReadyQueue->Insert(thread);
-    }
-    else
-    {
-        // Insert to L1 Queue
-        L1ReadyQueue->Insert(thread);
-        
-        // check if preemption is required
-        if (thread->getRemainingBurstTime() < kernel->currentThread->getRemainingBurstTime())
-        {
-            // do preemption
-        }
-    }
+
     
 }
 
@@ -200,14 +178,7 @@ Scheduler::FindNextToRun ()
     
     return thread;
     //<TODO>
-    if (!L1ReadyQueue->IsEmpty())
-        return L1ReadyQueue->RemoveFront();
-    else if (!L2ReadyQueue->IsEmpty())
-        return L2ReadyQueue->RemoveFront();
-    else if (!L3ReadyQueue->IsEmpty())
-        return L3ReadyQueue->RemoveFront();
-    else
-        return NULL;
+
 }
 
 //----------------------------------------------------------------------
