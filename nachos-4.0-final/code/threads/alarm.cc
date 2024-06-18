@@ -63,9 +63,13 @@ Alarm::CallBack()
     // 2. Update RunTime & RRTime
 
     // 3. Check Round Robin
-    kernel->scheduler->UpdatePriority();
-    if (status != IdleMode && kernel->scheduler->ToYield()) {
-	  interrupt->YieldOnReturn();
+    int t = 0;
+    if(kernel->stats->totalTicks-t>=100){
+      kernel->scheduler->UpdatePriority();
+      if (status != IdleMode && kernel->scheduler->ToYield()) {
+	    interrupt->YieldOnReturn();
+      }
+      t = kernel->stats->totalTicks;
     }
     //<TODO>
     

@@ -48,7 +48,7 @@ class Scheduler {
     
   private:
 	int currentLayer;
-	int threadStartTick;
+	int start;
 	SchedulerType schedulerType;
 	Thread *toBeDestroyed;		// finishing thread to be destroyed
     					// by the next thread that runs

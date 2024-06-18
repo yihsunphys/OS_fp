@@ -55,7 +55,7 @@ Scheduler::Scheduler()
     L2ReadyQueue = new SortedList<Thread*>(&Scheduler::L2Comparator);
     L3ReadyQueue = new List<Thread*>();
 	toBeDestroyed = NULL;
-    threadStartTick = kernel->stats->totalTicks;
+    start = kernel->stats->totalTicks;
 } 
 
 //----------------------------------------------------------------------
@@ -217,7 +217,7 @@ Scheduler::Run (Thread *nextThread, bool finishing)
     // DEBUG(dbgThread, "Switching from: " << oldThread->getName() << " to: " << nextThread->getName());
     if(oldThread->getID()!=nextThread->getID())
       DEBUG('z', "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread ["<< nextThread->getID() <<"] is now selected for execution, thread [" <<oldThread->getID()<<"] is replaced, and it has executed [" << RunTime()<<"]");
-    threadStartTick = kernel->stats->totalTicks;
+    start = kernel->stats->totalTicks;
     // This is a machine-dependent assembly language routine defined 
     // in switch.s.  You may have to think
     // a bit to figure out what happens after this, both from the point
@@ -366,9 +366,9 @@ bool Scheduler::ToYield () {
         yield = FALSE;
 
     return yield;
-    return false;
+    //return false;
 }
 int Scheduler::RunTime() {
-    return kernel->stats->totalTicks - threadStartTick;
+    return kernel->stats->totalTicks - start;
 }
 // <TODO>

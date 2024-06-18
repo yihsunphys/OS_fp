@@ -115,7 +115,7 @@ class Thread {
     int getID() { return ID; }
     int getPriority() { return Priority; }
     int getWaitTime() { return WaitTime; }
-    int getRemainingBurstTime() { return RemainingBurstTime-T; }
+    int getRemainingBurstTime() { return RemainingBurstTime; }
     int getRunTime () { return RunTime; }
     int getRRTime () { return RRTime; }
     void setPriority(int priority) { this->Priority = priority; }

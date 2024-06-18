@@ -261,12 +261,13 @@ Thread::Sleep (bool finishing)
     //cout << "Sleeping thread: " << name << ", ID: " << ID;
     status = BLOCKED;
 
-    //updateT(kernel->scheduler->RunTime(), kernel->stats->totalTicks);
-    //updateBurstTime(kernel->stats->totalTicks);
+    updateT(kernel->scheduler->RunTime(), kernel->stats->totalTicks);
+    if(getRemainingBurstTime()-T > 0){
+      DEBUG('z', "[UpdateRemainingBurstTime] Tick ["<<kernel->stats->totalTicks<<"]: Thread ["<<getID()<<"] update remaining burst time, from: ["<<getRemainingBurstTime()<<"] - [" <<min(T,getRemainingBurstTime())<<"], to ["<<max(0, getRemainingBurstTime()-T)<<"]");
+      setRemainingBurstTime(max(0, getRemainingBurstTime()-T));
+      resetT();
+    }
     
-    //DEBUG('z', "[UpdateRemainingBurstTime] Tick ["<<kernel->stats->totalTicks<<"]: Thread ["<<getID()<<"] update remaining burst time, from: ["<<getRemainingBurstTime()<<"] - [" <<T<<"], to ["<<getRemainingBurstTime()-T<<"]");
-    //setRemainingBurstTime(getRemainingBurstTime()-T);
-    //resetT();
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
 	    kernel->interrupt->Idle();	// no one to run, wait for an interruptd
 
