@@ -218,7 +218,7 @@ Thread::Yield ()
     // 2. Then, find next thread from ready state to push on running state
     // 3. After resetting some value of current_thread, then context switch
 
-    updateT(kernel->scheduler->RunTime(), kernel->stats->totalTicks);
+    updateLST(kernel->scheduler->RunTime());
     nextThread = kernel->scheduler->FindNextToRun();
     if (nextThread != NULL) {
 	kernel->scheduler->ReadyToRun(this);
@@ -261,13 +261,14 @@ Thread::Sleep (bool finishing)
     //cout << "Sleeping thread: " << name << ", ID: " << ID;
     status = BLOCKED;
 
-    updateT(kernel->scheduler->RunTime(), kernel->stats->totalTicks);
-    if(getRemainingBurstTime()-T > 0 && T!=0){
-      DEBUG('z', "[UpdateRemainingBurstTime] Tick ["<<kernel->stats->totalTicks<<"]: Thread ["<<getID()<<"] update remaining burst time, from: ["<<getRemainingBurstTime()<<"] - [" <<min(T,getRemainingBurstTime())<<"], to ["<<max(0, getRemainingBurstTime()-T)<<"]");
-      setRemainingBurstTime(max(0, getRemainingBurstTime()-T));
+
+    updateLST(kernel->scheduler->RunTime());
+    if(getRemainingBurstTime()-LastSwitchTime > 0 && LastSwitchTime!=0){
+      DEBUG('z', "[UpdateRemainingBurstTime] Tick ["<<kernel->stats->totalTicks<<"]: Thread ["<<getID()<<"] update remaining burst time, from: ["<<getRemainingBurstTime()<<"] - [" <<min(LastSwitchTime,getRemainingBurstTime())<<"], to ["<<max(0, getRemainingBurstTime()-LastSwitchTime)<<"]");
+      setRemainingBurstTime(max(0, getRemainingBurstTime()-LastSwitchTime));
       resetT();
     }
-    
+
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
 	    kernel->interrupt->Idle();	// no one to run, wait for an interruptd
 
