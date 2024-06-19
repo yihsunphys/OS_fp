@@ -315,7 +315,7 @@ void Scheduler::UpdatePriority() {
     // First update the priorities
     for (; !iter2.IsDone(); iter2.Next()) {
         iter2.Item()->updatePriority(time);
-        if (iter2.Item()->getPriority() >= 100) // update of level
+        if (iter2.Item()->getPriority() >= L1_PRIORITY_LOWER_BOUND) // update of level
             uplevel2.Append(iter2.Item());
     }
     // Then insert to corresponding queues
@@ -332,7 +332,7 @@ void Scheduler::UpdatePriority() {
     List<Thread *> uplevel3;
     for (; !iter3.IsDone(); iter3.Next()) {
         iter3.Item()->updatePriority(time);
-        if (iter3.Item()->getPriority() >= 50)  // update of level 
+        if (iter3.Item()->getPriority() >= L2_PRIORITY_LOWER_BOUND)  // update of level 
             uplevel3.Append(iter3.Item());
     }
     ListIterator<Thread *> uplevel3Iter(&uplevel3);
