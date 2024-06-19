@@ -350,7 +350,7 @@ bool Scheduler::ToYield () {
 
     if (currentLayer == 3)
     {
-        if (kernel->currentThread->GetRunTime() >= RR_TIME_QUANTUM || !L1ReadyQueue->IsEmpty() || !L2ReadyQueue->IsEmpty())
+        if (kernel->currentThread->getRunTime() >= RR_TIME_QUANTUM || !L1ReadyQueue->IsEmpty() || !L2ReadyQueue->IsEmpty())
             yield = true;
     }
     else if (currentLayer == 2 && !L1ReadyQueue->IsEmpty())
