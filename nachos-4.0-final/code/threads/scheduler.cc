@@ -348,9 +348,9 @@ bool Scheduler::ToYield () {
     int currentThreadRemainTime = kernel->currentThread->getRemainingBurstTime() - RunTime();
     int L1MinRemainTime = L1ReadyQueue->IsEmpty() ? INT_MAX : L1ReadyQueue->Front()->getRemainingBurstTime();
 
-    if (currentLayer == 3 && RunTime() >= RR_TIME_QUANTUM)
+    if (currentLayer == 3)
     {
-        if (RunTime() >= RR_TIME_QUANTUM || !L1ReadyQueue->IsEmpty() || !L2ReadyQueue->IsEmpty())
+        if (kernel->currentThread->GetRunTime() >= RR_TIME_QUANTUM || !L1ReadyQueue->IsEmpty() || !L2ReadyQueue->IsEmpty())
             yield = true;
     }
     else if (currentLayer == 2 && !L1ReadyQueue->IsEmpty())
