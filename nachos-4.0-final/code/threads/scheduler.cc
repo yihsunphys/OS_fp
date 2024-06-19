@@ -123,6 +123,12 @@ Scheduler::ReadyToRun (Thread *thread)
     {
         L1ReadyQueue->Insert(thread);
         thread->setQueueLayer(1);
+        Thread* curThread = kernel->currentThread;
+        if (curThread->getQueueLayer() == 1 && thread->getRemainingBurstTime() < curThread->getRemainingBurstTime())
+        {
+            curThread->Yield();
+        }
+
     } 
     else 
     {

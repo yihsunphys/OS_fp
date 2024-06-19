@@ -226,7 +226,7 @@ Thread::Yield ()
     // 3. After resetting some value of current_thread, then context switch
 
     // updateLST(kernel->scheduler->RunTime());
-    
+    setRemainingBurstTime(max(0, RemainingBurstTime - kernel->scheduler->RunTime()));
     kernel->scheduler->ReadyToRun(this);
     nextThread = kernel->scheduler->FindNextToRun();
     
