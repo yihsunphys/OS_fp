@@ -268,9 +268,9 @@ Thread::Sleep (bool finishing)
     //cout << "Sleeping thread: " << name << ", ID: " << ID;
     status = BLOCKED;
 
-    if(getRemainingBurstTime()- RunTime > 0 && RunTime!=0){
+    if(RunTime!=0){
         DEBUG('z', "[UpdateRemainingBurstTime] Tick ["<<kernel->stats->totalTicks<<"]: Thread ["<<getID()<<"] update remaining burst time, from: [" << RemainingBurstTime << "] - [" << min(RunTime,RemainingBurstTime) << "], to [" << max(0, RemainingBurstTime - RunTime) <<"]");
-        RemainingBurstTime = max(0, RemainingBurstTime - kernel->scheduler->RunTime());
+        RemainingBurstTime = max(0, RemainingBurstTime - RunTime);
     }
 
     while ((nextThread = kernel->scheduler->FindNextToRun()) == NULL)
