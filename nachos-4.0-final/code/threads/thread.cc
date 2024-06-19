@@ -37,6 +37,12 @@ Thread::Thread(char* threadName, int threadID)
 {
     ID = threadID;
     name = threadName;
+    Priority = 0;
+    WaitTime = 0;
+    RemainingBurstTime = 0;
+    RunTime = 0;
+    RRTime = 0;
+    
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
