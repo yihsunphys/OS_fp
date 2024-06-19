@@ -42,7 +42,8 @@ Thread::Thread(char* threadName, int threadID)
     RemainingBurstTime = 0;
     RunTime = 0;
     RRTime = 0;
-
+    QueueLayer = 0;
+    
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
@@ -225,7 +226,7 @@ Thread::Yield ()
     // 3. After resetting some value of current_thread, then context switch
 
     // updateLST(kernel->scheduler->RunTime());
-    setRemainingBurstTime(max(0, RemainingBurstTime - kernel->scheduler->RunTime()));
+    
     kernel->scheduler->ReadyToRun(this);
     nextThread = kernel->scheduler->FindNextToRun();
     

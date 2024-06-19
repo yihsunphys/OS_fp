@@ -12,6 +12,10 @@
 #include "alarm.h"
 #include "main.h"
 
+namespace
+{
+    const int ALARM_TRIGGER_PERIOD = 100; // alarm will be triggered every 100 ticks
+}
 //----------------------------------------------------------------------
 // Alarm::Alarm
 //      Initialize a software alarm clock.  Start up a timer device
@@ -23,6 +27,7 @@
 Alarm::Alarm(bool doRandom)
 {
     timer = new Timer(doRandom, this);
+    lastTimeCheck = 0;
 }
 
 //----------------------------------------------------------------------
@@ -51,8 +56,7 @@ Alarm::CallBack()
 {
     Interrupt *interrupt = kernel->interrupt;
     MachineStatus status = interrupt->getStatus();
-    
-
+    Thread* curThread = kernel->currentThread;
     //<TODO>
 
 
@@ -63,13 +67,21 @@ Alarm::CallBack()
     // 2. Update RunTime & RRTime
 
     // 3. Check Round Robin
-    int t = 0;
-    if(kernel->stats->totalTicks-t>=100){
-      kernel->scheduler->UpdatePriority();
-      if (status != IdleMode && kernel->scheduler->ToYield()) {
-	    interrupt->YieldOnReturn();
-      }
-      t = kernel->stats->totalTicks;
+    if(kernel->stats->totalTicks - lastTimeCheck >= ALARM_TRIGGER_PERIOD){
+        kernel->scheduler->UpdatePriority();
+        curThread->setRunTime(kernel->scheduler->RunTime());
+        if (curThread->getQueueLayer() == 3)
+        {
+            curThread->setRRTime(kernel->scheduler->RunTime());
+            if (curThread->getRRTime() >= 200)
+                interrupt->YieldOnReturn();
+        }
+            
+        
+        // if (status != IdleMode && kernel->scheduler->ToYield()) {
+        //     interrupt->YieldOnReturn();
+        // }
+        lastTimeCheck = kernel->stats->totalTicks;
     }
     //<TODO>
     

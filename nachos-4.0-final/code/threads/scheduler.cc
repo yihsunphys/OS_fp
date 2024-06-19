@@ -109,28 +109,27 @@ Scheduler::ReadyToRun (Thread *thread)
     
 
     int priority = thread->getPriority();
-    int level;
     if (priority >= L3_PRIORITY_LOWER_BOUND && priority < L2_PRIORITY_LOWER_BOUND) 
     {
         L3ReadyQueue->Append(thread);
-        level = 3;
+        thread->setQueueLayer(3);
     } 
     else if (priority < L1_PRIORITY_LOWER_BOUND) 
     {
         L2ReadyQueue->Insert(thread);
-        level = 2;
+        thread->setQueueLayer(2);
     } 
     else if (priority < L1_PRIORITY_UPPER_BOUND) 
     {
         L1ReadyQueue->Insert(thread);
-        level = 1;
+        thread->setQueueLayer(1);
     } 
     else 
     {
         cout << "Invalid Priority!" << endl;
         Abort();
     }
-    DEBUG('z', "[InsertToQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L" << level);
+    DEBUG('z', "[InsertToQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L" << thread->getQueueLayer());
     //<TODO>
     // readyList->Append(thread);
 

@@ -120,11 +120,13 @@ class Thread {
 
     int getRunTime () { return RunTime; }
     int getRRTime () { return RRTime; }
+    int getQueueLayer(return QueueLayer;)
     void setPriority(int priority) { this->Priority = priority; }
     void setWaitTime(int WaitTime) { this->WaitTime = WaitTime; }
     void setRemainingBurstTime(int RemainingBurstTime) { this->RemainingBurstTime = RemainingBurstTime; }
     void setRunTime(int RunTime) { this->RunTime = RunTime; }
     void setRRTime(int RRTime) { this->RRTime = RRTime; }
+    void setQueueLayer(int QueueLayer){ this->QueueLayer = QueueLayer; }
     //aging
     void updatePriority(int t) { 
         if (t - WaitTime >= 400) {
@@ -160,6 +162,7 @@ class Thread {
     int RunTime;
     int RRTime;
     int LastSwitchTime;
+    int QueueLayer;
     //<REPORT>
     
     void StackAllocate(VoidFunctionPtr func, void *arg);
