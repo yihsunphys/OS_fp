@@ -42,7 +42,6 @@ Thread::Thread(char* threadName, int threadID)
     RemainingBurstTime = 0;
     RunTime = 0;
     RRTime = 0;
-    QueueLayer = 0;
     
     stackTop = NULL;
     stack = NULL;
