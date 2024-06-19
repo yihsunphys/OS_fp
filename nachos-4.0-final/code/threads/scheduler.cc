@@ -228,7 +228,7 @@ Scheduler::Run (Thread *nextThread, bool finishing)
     
     // DEBUG(dbgThread, "Switching from: " << oldThread->getName() << " to: " << nextThread->getName());
     if(oldThread->getID()!=nextThread->getID())
-      DEBUG('z', "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread ["<< nextThread->getID() <<"] is now selected for execution, thread [" <<oldThread->getID()<<"] is replaced, and it has executed [" << RunTime()<<"]");
+      DEBUG('z', "[ContextSwitch] Tick [" << kernel->stats->totalTicks << "]: Thread ["<< nextThread->getID() <<"] is now selected for execution, thread [" <<oldThread->getID()<<"] is replaced, and it has executed [" << oldThread->getRunTime()<<"]");
     start = kernel->stats->totalTicks;
     // This is a machine-dependent assembly language routine defined 
     // in switch.s.  You may have to think
@@ -347,7 +347,7 @@ bool Scheduler::ToYield () {
     bool yield = false;
     int currentThreadRemainTime = kernel->currentThread->getRemainingBurstTime() - RunTime();
     int L1MinRemainTime = L1ReadyQueue->IsEmpty() ? INT_MAX : L1ReadyQueue->Front()->getRemainingBurstTime();
-
+    
     if (currentLayer == 3)
     {
         if (kernel->currentThread->getRunTime() >= RR_TIME_QUANTUM || !L1ReadyQueue->IsEmpty() || !L2ReadyQueue->IsEmpty())
