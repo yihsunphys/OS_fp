@@ -27,7 +27,6 @@ namespace
 Alarm::Alarm(bool doRandom)
 {
     timer = new Timer(doRandom, this);
-    lastTimeCheck = 0;
 }
 
 //----------------------------------------------------------------------
@@ -67,22 +66,12 @@ Alarm::CallBack()
     // 2. Update RunTime & RRTime
 
     // 3. Check Round Robin
-    if(kernel->stats->totalTicks - lastTimeCheck >= ALARM_TRIGGER_PERIOD){
-        kernel->scheduler->UpdatePriority();
-        curThread->setRunTime(kernel->scheduler->RunTime());
-        if (curThread->getQueueLayer() == 3)
-        {
-            curThread->setRRTime(kernel->scheduler->RunTime());
-            if (curThread->getRRTime() >= 200)
-                interrupt->YieldOnReturn();
-        }
-            
-        
-        // if (status != IdleMode && kernel->scheduler->ToYield()) {
-        //     interrupt->YieldOnReturn();
-        // }
-        lastTimeCheck = kernel->stats->totalTicks;
+    kernel->scheduler->UpdatePriority();
+    curThread->setRunTime(kernel->scheduler->RunTime());
+    if (status != IdleMode && kernel->scheduler->ToYield()) {
+        interrupt->YieldOnReturn();
     }
+
     //<TODO>
     
      //    if (status == IdleMode) {    // is it time to quit?
