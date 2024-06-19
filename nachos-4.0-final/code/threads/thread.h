@@ -120,7 +120,7 @@ class Thread {
 
     int getRunTime () { return RunTime; }
     int getRRTime () { return RRTime; }
-    int getQueueLayer(return QueueLayer;)
+    int getQueueLayer() {return QueueLayer;}
     void setPriority(int priority) { this->Priority = priority; }
     void setWaitTime(int WaitTime) { this->WaitTime = WaitTime; }
     void setRemainingBurstTime(int RemainingBurstTime) { this->RemainingBurstTime = RemainingBurstTime; }
