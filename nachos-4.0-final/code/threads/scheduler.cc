@@ -107,35 +107,29 @@ Scheduler::ReadyToRun (Thread *thread)
     thread->setWaitTime(stats->totalTicks);
     thread->setStatus(READY);
     
-
     int priority = thread->getPriority();
+    int level = 0;
     if (priority >= L3_PRIORITY_LOWER_BOUND && priority < L2_PRIORITY_LOWER_BOUND) 
     {
         L3ReadyQueue->Append(thread);
-        thread->setQueueLayer(3);
+        level = 3;
     } 
     else if (priority < L1_PRIORITY_LOWER_BOUND) 
     {
         L2ReadyQueue->Insert(thread);
-        thread->setQueueLayer(2);
+        level = 2;
     } 
     else if (priority < L1_PRIORITY_UPPER_BOUND) 
     {
         L1ReadyQueue->Insert(thread);
-        thread->setQueueLayer(1);
-        Thread* curThread = kernel->currentThread;
-        if (curThread->getQueueLayer() == 1 && thread->getRemainingBurstTime() < curThread->getRemainingBurstTime())
-        {
-            curThread->Yield();
-        }
-
+        level = 1;
     } 
     else 
     {
         cout << "Invalid Priority!" << endl;
         Abort();
     }
-    DEBUG('z', "[InsertToQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L" << thread->getQueueLayer());
+    DEBUG('z', "[InsertToQueue] Tick [" << stats->totalTicks << "]: Thread [" << thread->getID() << "] is inserted into queue L" << level);
     //<TODO>
     // readyList->Append(thread);
 
