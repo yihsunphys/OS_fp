@@ -42,7 +42,7 @@ Thread::Thread(char* threadName, int threadID)
     RemainingBurstTime = 0;
     RunTime = 0;
     RRTime = 0;
-    
+
     stackTop = NULL;
     stack = NULL;
     status = JUST_CREATED;
@@ -225,7 +225,7 @@ Thread::Yield ()
     // 3. After resetting some value of current_thread, then context switch
 
     // updateLST(kernel->scheduler->RunTime());
-    setRemainingBurstTime(RemainingBurstTime - kernel->scheduler->RunTime());
+    setRemainingBurstTime(max(0, RemainingBurstTime - kernel->scheduler->RunTime()));
     kernel->scheduler->ReadyToRun(this);
     nextThread = kernel->scheduler->FindNextToRun();
     
@@ -273,7 +273,7 @@ Thread::Sleep (bool finishing)
     updateLST(kernel->scheduler->RunTime());
     if(getRemainingBurstTime()-LastSwitchTime > 0 && LastSwitchTime!=0){
       DEBUG('z', "[UpdateRemainingBurstTime] Tick ["<<kernel->stats->totalTicks<<"]: Thread ["<<getID()<<"] update remaining burst time, from: ["<<getRemainingBurstTime()<<"] - [" <<min(LastSwitchTime,getRemainingBurstTime())<<"], to ["<<max(0, getRemainingBurstTime()-LastSwitchTime)<<"]");
-      setRemainingBurstTime(max(0, getRemainingBurstTime()-LastSwitchTime));
+      setRemainingBurstTime(max(0, RemainingBurstTime - kernel->scheduler->RunTime()));
       resetT();
     }
 
