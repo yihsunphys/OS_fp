@@ -71,7 +71,7 @@ Alarm::CallBack()
     if (status != IdleMode && kernel->scheduler->ToYield()) {
         interrupt->YieldOnReturn();
     }
-
+    // cout << "Alarm Triggered at: " << kernel->stats->totalTicks  << endl;
     //<TODO>
     
      //    if (status == IdleMode) {    // is it time to quit?
