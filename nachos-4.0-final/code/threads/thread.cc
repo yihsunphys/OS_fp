@@ -227,7 +227,8 @@ Thread::Yield ()
     setRemainingBurstTime(max(0, RemainingBurstTime - RunTime));
     kernel->scheduler->ReadyToRun(this);
     nextThread = kernel->scheduler->FindNextToRun();
-    kernel->scheduler->Run(nextThread, false);
+    if (nextThread != NULL)
+        kernel->scheduler->Run(nextThread, false);
     RunTime = 0;
     //<TODO>
 
